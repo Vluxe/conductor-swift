@@ -8,6 +8,11 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 import Foundation
+#if os(iOS)
+    import Starscream
+#elseif os(OSX)
+    import StarscreamOSX
+#endif
 
 public enum VLXConOpCode: Int {
     case Bind   = 1
