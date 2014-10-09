@@ -6,13 +6,7 @@
 //  Copyright (c) 2014 Vluxe. All rights reserved.
 //
 
-#import <TargetConditionals.h>
-
-#ifdef TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
-#import <UIKit/UIKit.h>
-#else
-#import <Cocoa/Cocoa.h>
-#endif
+#import <Foundation/Foundation.h>
 
 //! Project version number for Conductor.
 FOUNDATION_EXPORT double ConductorVersionNumber;
