@@ -14,8 +14,8 @@
 		D9C3E35319E48280009FC285 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96595AF19E47CE100B80735 /* Starscream.framework */; };
 		D9C3E35519E48E7A009FC285 /* Conductor.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C3E35419E48E7A009FC285 /* Conductor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9C3E35619E48E7A009FC285 /* Conductor.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C3E35419E48E7A009FC285 /* Conductor.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D9C3E38219E490B3009FC285 /* VLXConductor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C3E38119E490B3009FC285 /* VLXConductor.swift */; };
-		D9C3E38319E490B3009FC285 /* VLXConductor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C3E38119E490B3009FC285 /* VLXConductor.swift */; };
+		D9C3E38219E490B3009FC285 /* Conductor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C3E38119E490B3009FC285 /* Conductor.swift */; };
+		D9C3E38319E490B3009FC285 /* Conductor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C3E38119E490B3009FC285 /* Conductor.swift */; };
 		D9C3E38619E490DA009FC285 /* StarscreamOSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C3E37E19E49095009FC285 /* StarscreamOSX.framework */; };
 /* End PBXBuildFile section */
 
@@ -88,7 +88,7 @@
 		D96595A919E47CE100B80735 /* Starscream.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Starscream.xcodeproj; path = ../starscream/Starscream.xcodeproj; sourceTree = "<group>"; };
 		D9C3E35419E48E7A009FC285 /* Conductor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conductor.h; sourceTree = SOURCE_ROOT; };
 		D9C3E35719E48E9A009FC285 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
-		D9C3E38119E490B3009FC285 /* VLXConductor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VLXConductor.swift; sourceTree = SOURCE_ROOT; };
+		D9C3E38119E490B3009FC285 /* Conductor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conductor.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,7 +151,7 @@
 		D965954019E458C100B80735 /* Conductor */ = {
 			isa = PBXGroup;
 			children = (
-				D9C3E38119E490B3009FC285 /* VLXConductor.swift */,
+				D9C3E38119E490B3009FC285 /* Conductor.swift */,
 				D9C3E35419E48E7A009FC285 /* Conductor.h */,
 				D965954119E458C100B80735 /* Supporting Files */,
 			);
@@ -398,7 +398,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9C3E38219E490B3009FC285 /* VLXConductor.swift in Sources */,
+				D9C3E38219E490B3009FC285 /* Conductor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,7 +414,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9C3E38319E490B3009FC285 /* VLXConductor.swift in Sources */,
+				D9C3E38319E490B3009FC285 /* Conductor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

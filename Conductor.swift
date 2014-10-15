@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//  VLXConductor.swift
+//   Conductor.swift
 //
 //  Created by Dalton Cherry on 8/28/14.
 //  Copyright (c) 2014 Vluxe. All rights reserved.
@@ -14,7 +14,7 @@ import Foundation
     import StarscreamOSX
 #endif
 
-public enum VLXConOpCode: Int {
+public enum ConOpCode: Int {
     case Bind   = 1
     case Unbind = 2
     case Write  = 3
@@ -23,7 +23,7 @@ public enum VLXConOpCode: Int {
     case Invite = 8
 }
 
-enum VLXMessageType: String {
+enum MessageType: String {
     case name = "name"
     case channelName = "channel_name"
     case body = "body"
@@ -31,61 +31,61 @@ enum VLXMessageType: String {
     case additional = "additional"
 }
 //This represents messages that come back from the channel
-public struct VLXMessage {
+public struct Message {
     
     public var name: String?
     var body: String?
     var channelName: String?
-    var opcode: VLXConOpCode
+    var opcode: ConOpCode
     var additional: AnyObject?
     
     init(body: String?, name: String?, channelName: String?, code: Int, additional: AnyObject?) {
-        self.opcode = VLXConOpCode(rawValue: code)!
+        self.opcode = ConOpCode(rawValue: code)!
         self.name = name
         self.channelName = channelName
         self.body = body
         self.additional = additional
     }
     
-    public static func messageFromString(jsonString: String) -> VLXMessage {
+    public static func messageFromString(jsonString: String) -> Message {
         let data = jsonString.dataUsingEncoding(NSUTF8StringEncoding)
         let dict = NSJSONSerialization.JSONObjectWithData(data!, options: .allZeros, error: nil) as Dictionary<String, AnyObject>
-        let opcode = dict[VLXMessageType.opCode.rawValue] as? Int
-        return VLXMessage(body: dict[VLXMessageType.body.rawValue] as? String, name: dict[VLXMessageType.name.rawValue] as? String,
-            channelName: dict[VLXMessageType.channelName.rawValue] as? String, code: opcode!, additional: dict[VLXMessageType.additional.rawValue])
+        let opcode = dict[MessageType.opCode.rawValue] as? Int
+        return Message(body: dict[MessageType.body.rawValue] as? String, name: dict[MessageType.name.rawValue] as? String,
+            channelName: dict[MessageType.channelName.rawValue] as? String, code: opcode!, additional: dict[MessageType.additional.rawValue])
    }
     
     public func toJSONString() -> String {
         var dict = Dictionary<String,AnyObject>()
         
         if(body != nil) {
-            dict[VLXMessageType.body.rawValue] = body
+            dict[MessageType.body.rawValue] = body
         }
         if(name != nil) {
-            dict[VLXMessageType.name.rawValue] = name
+            dict[MessageType.name.rawValue] = name
         }
         if(channelName != nil) {
-            dict[VLXMessageType.channelName.rawValue] = channelName
+            dict[MessageType.channelName.rawValue] = channelName
         }
         if(additional != nil) {
-            dict[VLXMessageType.additional.rawValue] = additional
+            dict[MessageType.additional.rawValue] = additional
         }
-        dict[VLXMessageType.opCode.rawValue] = opcode.rawValue
+        dict[MessageType.opCode.rawValue] = opcode.rawValue
         let data = NSJSONSerialization.dataWithJSONObject(dict, options: .allZeros, error: nil)
         return NSString(data: data!, encoding: NSUTF8StringEncoding)!
     }
 }
 
-public class VLXConductor : WebsocketDelegate {
+public class Conductor : WebsocketDelegate {
     var socket: Websocket!
-    var channels = Dictionary<String,((VLXMessage) -> Void)>()
-    var serverChannel:((VLXMessage) -> Void)?
-    var connection = false
-    var autoReconnect = true
+    var channels = Dictionary<String,((Message) -> Void)>()
+    var serverChannel:((Message) -> Void)?
+    public var connection = false
+    public var autoReconnect = true
     var kAllMessages = "*"
     
     ///url is the conductor server to connect to and authToken is the token to use.
-    init(_ url: NSURL, _ authToken: String) {
+    public init(_ url: NSURL, _ authToken: String) {
         //setup and use websocket
         socket = Websocket(url: url)
         socket.delegate = self
@@ -94,7 +94,7 @@ public class VLXConductor : WebsocketDelegate {
     }
     
     ///Bind to a channel by its name and get messages from it
-    public func bind(channelName: String, _ messages:((VLXMessage) -> Void)) {
+    public func bind(channelName: String, _ messages:((Message) -> Void)) {
         if channels[channelName] == nil {
             writeMessage("", channelName, .Bind, nil)
         }
@@ -109,7 +109,7 @@ public class VLXConductor : WebsocketDelegate {
     }
     
     ///Bind to the "server channel" and get messages that are from the server opcode
-    public func serverBind(messages:((VLXMessage) -> Void)) {
+    public func serverBind(messages:((Message) -> Void)) {
         self.serverChannel = messages
     }
     
@@ -158,8 +158,8 @@ public class VLXConductor : WebsocketDelegate {
     }
     
     ///writes the message to the websocket
-    private func writeMessage(body: String, _ channelName: String?, _ opcode: VLXConOpCode, _ additional: AnyObject?) {
-        let message = VLXMessage(body: body, name: nil, channelName: channelName, code: opcode.rawValue, additional: additional)
+    private func writeMessage(body: String, _ channelName: String?, _ opcode: ConOpCode, _ additional: AnyObject?) {
+        let message =  Message(body: body, name: nil, channelName: channelName, code: opcode.rawValue, additional: additional)
         socket.writeString(message.toJSONString())
     }
     
@@ -184,9 +184,9 @@ public class VLXConductor : WebsocketDelegate {
         
     }
     
-    ///take the message and serialize it to the VLXMessage object then send it to the proper channel
+    ///take the message and serialize it to the  Message object then send it to the proper channel
     public func websocketDidReceiveMessage(text: String) {
-        let message = VLXMessage.messageFromString(text)
+        let message =  Message.messageFromString(text)
         if message.opcode == .Server || message.opcode == .Invite {
             if let callback = serverChannel {
                callback(message)
