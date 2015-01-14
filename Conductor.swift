@@ -46,7 +46,7 @@ public struct Message {
         self.body = body
         self.additional = additional
     }
-    
+    //create a message from a JSON string
     public static func messageFromString(jsonString: String) -> Message {
         let data = jsonString.dataUsingEncoding(NSUTF8StringEncoding)
         let dict = NSJSONSerialization.JSONObjectWithData(data!, options: .allZeros, error: nil) as Dictionary<String, AnyObject>
@@ -54,7 +54,7 @@ public struct Message {
         return Message(body: dict[MessageType.body.rawValue] as? String, name: dict[MessageType.name.rawValue] as? String,
             channelName: dict[MessageType.channelName.rawValue] as? String, code: opcode!, additional: dict[MessageType.additional.rawValue])
    }
-    
+    // convert the data to a JSON string
     public func toJSONString() -> String {
         var dict = Dictionary<String,AnyObject>()
         
@@ -76,34 +76,42 @@ public struct Message {
     }
 }
 
-public class Conductor : WebsocketDelegate {
-    var socket: Websocket!
+//This is where the main logic happens
+public class Conductor : WebSocketDelegate {
+    var socket: WebSocket!
     var channels = Dictionary<String,((Message) -> Void)>()
     var serverChannel:((Message) -> Void)?
-    public var connection = false
-    public var autoReconnect = true
+    var connectionStatus:((Bool) -> Void)?
+    var connection = false
     var kAllMessages = "*"
+    public var isConnected: Bool { return connection }
     
     ///url is the conductor server to connect to and authToken is the token to use.
     public init(_ url: NSURL, _ authToken: String) {
         //setup and use websocket
-        socket = Websocket(url: url)
+        socket = WebSocket(url: url)
         socket.delegate = self
         socket.headers["Token"] = authToken
         socket.connect()
     }
     
+    ///set the authToken of the client
+    public func setAuthToken(token: String) {
+        socket.headers["Token"] = token
+    }
+    
     ///Bind to a channel by its name and get messages from it
     public func bind(channelName: String, _ messages:((Message) -> Void)) {
-        if channels[channelName] == nil {
+        channels[channelName] = messages
+        if channelName != kAllMessages {
             writeMessage("", channelName, .Bind, nil)
         }
-        channels[channelName] = messages
     }
     
     ///Unbind from a channel by its name and stop getting messages from it
     public func unbind(channelName: String) {
-        if self.channels.removeValueForKey(channelName) != nil {
+        channels.removeValueForKey(channelName)
+        if channelName != kAllMessages {
             writeMessage("", channelName, .Unbind, nil)
         }
     }
@@ -131,8 +139,8 @@ public class Conductor : WebsocketDelegate {
     }
     
     ///send a invite to a channel to a user
-    public func sendInvite(name: String, _ channelName: String) {
-        writeMessage(name, channelName, .Invite, nil)
+    public func sendInvite(name: String, _ channelName: String, _ additional: AnyObject? = nil) {
+        writeMessage(name, channelName, .Invite, additional)
     }
     
     ///send a message to a channel with the server opcode. 
@@ -141,19 +149,19 @@ public class Conductor : WebsocketDelegate {
         writeMessage(body,channelName,.Server,additional)
     }
     
+    ///connect to the stream, if not connected
     public func connect() {
         if !connection {
             channels.removeAll(keepCapacity: false)
             socket.connect()
-            connection = true
         }
     }
     
+    //disconnect from the stream, if connected
     public func disconnect() {
         if connection {
             channels.removeAll(keepCapacity: false)
             socket.disconnect()
-            connection = false
         }
     }
     
@@ -168,20 +176,22 @@ public class Conductor : WebsocketDelegate {
     ///Websocket did connect
     public func websocketDidConnect() {
         connection = true
+        if let status = connectionStatus {
+            status(connection)
+        }
     }
     
     ///Websocket did disconnect
     public func websocketDidDisconnect(error: NSError?) {
-        if autoReconnect {
-            socket.connect()
-        } else {
-            connection = false
+        connection = false
+        if let status = connectionStatus {
+            status(connection)
         }
     }
     
     ///Got an error, that is less than ideal
     public func websocketDidWriteError(error: NSError?) {
-        
+        //println("got an error of some kind: \(error)")
     }
     
     ///take the message and serialize it to the  Message object then send it to the proper channel

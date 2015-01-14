@@ -11,12 +11,10 @@
 		D965958819E4790800B80735 /* Conductor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D965957D19E4790800B80735 /* Conductor.framework */; };
 		D96595A519E47C6100B80735 /* ConductorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96595A319E47C6100B80735 /* ConductorTests.swift */; };
 		D96595A619E47C6100B80735 /* ConductorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96595A319E47C6100B80735 /* ConductorTests.swift */; };
-		D9C3E35319E48280009FC285 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96595AF19E47CE100B80735 /* Starscream.framework */; };
 		D9C3E35519E48E7A009FC285 /* Conductor.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C3E35419E48E7A009FC285 /* Conductor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9C3E35619E48E7A009FC285 /* Conductor.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C3E35419E48E7A009FC285 /* Conductor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9C3E38219E490B3009FC285 /* Conductor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C3E38119E490B3009FC285 /* Conductor.swift */; };
 		D9C3E38319E490B3009FC285 /* Conductor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C3E38119E490B3009FC285 /* Conductor.swift */; };
-		D9C3E38619E490DA009FC285 /* StarscreamOSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C3E37E19E49095009FC285 /* StarscreamOSX.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,48 +32,6 @@
 			remoteGlobalIDString = D965957C19E4790800B80735;
 			remoteInfo = "Conductor-iOS";
 		};
-		D96595AE19E47CE100B80735 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D96595A919E47CE100B80735 /* Starscream.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6B3E79E619D48B7F006071F7;
-			remoteInfo = Starscream;
-		};
-		D96595B019E47CE100B80735 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D96595A919E47CE100B80735 /* Starscream.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6B3E79F119D48B7F006071F7;
-			remoteInfo = StarscreamTests;
-		};
-		D96595B419E47D7F00B80735 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D96595A919E47CE100B80735 /* Starscream.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 6B3E79E519D48B7F006071F7;
-			remoteInfo = Starscream;
-		};
-		D9C3E37D19E49095009FC285 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D96595A919E47CE100B80735 /* Starscream.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D9C3E35F19E48FF1009FC285;
-			remoteInfo = StarscreamOSX;
-		};
-		D9C3E37F19E49095009FC285 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D96595A919E47CE100B80735 /* Starscream.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D9C3E36919E48FF1009FC285;
-			remoteInfo = StarscreamOSXTests;
-		};
-		D9C3E38419E490D4009FC285 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D96595A919E47CE100B80735 /* Starscream.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D9C3E35E19E48FF1009FC285;
-			remoteInfo = StarscreamOSX;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -85,7 +41,6 @@
 		D965958719E4790800B80735 /* ConductorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConductorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D96595A319E47C6100B80735 /* ConductorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConductorTests.swift; sourceTree = "<group>"; };
 		D96595A419E47C6100B80735 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D96595A919E47CE100B80735 /* Starscream.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Starscream.xcodeproj; path = ../starscream/Starscream.xcodeproj; sourceTree = "<group>"; };
 		D9C3E35419E48E7A009FC285 /* Conductor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conductor.h; sourceTree = SOURCE_ROOT; };
 		D9C3E35719E48E9A009FC285 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		D9C3E38119E490B3009FC285 /* Conductor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conductor.swift; sourceTree = SOURCE_ROOT; };
@@ -96,7 +51,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9C3E38619E490DA009FC285 /* StarscreamOSX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +66,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9C3E35319E48280009FC285 /* Starscream.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,7 +86,6 @@
 				D965954019E458C100B80735 /* Conductor */,
 				D965953F19E458C100B80735 /* Products */,
 				D96595A219E47C6100B80735 /* Tests */,
-				D96595A919E47CE100B80735 /* Starscream.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -175,17 +127,6 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		D96595AA19E47CE100B80735 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D96595AF19E47CE100B80735 /* Starscream.framework */,
-				D96595B119E47CE100B80735 /* StarscreamTests.xctest */,
-				D9C3E37E19E49095009FC285 /* StarscreamOSX.framework */,
-				D9C3E38019E49095009FC285 /* StarscreamOSXTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -220,7 +161,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D9C3E38519E490D4009FC285 /* PBXTargetDependency */,
 			);
 			name = ConductorOSX;
 			productName = Conductor;
@@ -257,7 +197,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D96595B519E47D7F00B80735 /* PBXTargetDependency */,
 			);
 			name = Conductor;
 			productName = "Conductor-iOS";
@@ -315,12 +254,6 @@
 			mainGroup = D965953419E458C100B80735;
 			productRefGroup = D965953F19E458C100B80735 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = D96595AA19E47CE100B80735 /* Products */;
-					ProjectRef = D96595A919E47CE100B80735 /* Starscream.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				D965953D19E458C100B80735 /* ConductorOSX */,
@@ -330,37 +263,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		D96595AF19E47CE100B80735 /* Starscream.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Starscream.framework;
-			remoteRef = D96595AE19E47CE100B80735 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D96595B119E47CE100B80735 /* StarscreamTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = StarscreamTests.xctest;
-			remoteRef = D96595B019E47CE100B80735 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D9C3E37E19E49095009FC285 /* StarscreamOSX.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = StarscreamOSX.framework;
-			remoteRef = D9C3E37D19E49095009FC285 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D9C3E38019E49095009FC285 /* StarscreamOSXTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = StarscreamOSXTests.xctest;
-			remoteRef = D9C3E37F19E49095009FC285 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		D965953C19E458C100B80735 /* Resources */ = {
@@ -438,16 +340,6 @@
 			isa = PBXTargetDependency;
 			target = D965957C19E4790800B80735 /* Conductor */;
 			targetProxy = D965958919E4790800B80735 /* PBXContainerItemProxy */;
-		};
-		D96595B519E47D7F00B80735 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Starscream;
-			targetProxy = D96595B419E47D7F00B80735 /* PBXContainerItemProxy */;
-		};
-		D9C3E38519E490D4009FC285 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = StarscreamOSX;
-			targetProxy = D9C3E38419E490D4009FC285 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
