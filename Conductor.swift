@@ -174,7 +174,7 @@ public class Conductor : WebSocketDelegate {
     //MARK: Websocket delegate methods
     
     ///Websocket did connect
-    public func websocketDidConnect() {
+    public func websocketDidConnect(ws: WebSocket) {
         connection = true
         if let status = connectionStatus {
             status(connection)
@@ -182,20 +182,15 @@ public class Conductor : WebSocketDelegate {
     }
     
     ///Websocket did disconnect
-    public func websocketDidDisconnect(error: NSError?) {
+    public func websocketDidDisconnect(ws: WebSocket, error: NSError?) {
         connection = false
         if let status = connectionStatus {
             status(connection)
         }
     }
     
-    ///Got an error, that is less than ideal
-    public func websocketDidWriteError(error: NSError?) {
-        //println("got an error of some kind: \(error)")
-    }
-    
     ///take the message and serialize it to the  Message object then send it to the proper channel
-    public func websocketDidReceiveMessage(text: String) {
+    public func websocketDidReceiveMessage(ws: WebSocket, text: String) {
         let message =  Message.messageFromString(text)
         if message.opcode == .Server || message.opcode == .Invite {
             if let callback = serverChannel {
@@ -212,7 +207,7 @@ public class Conductor : WebSocketDelegate {
     }
     
     ///Shouldn't get anything on this.
-    public func websocketDidReceiveData(data: NSData) {
+    public func websocketDidReceiveData(ws: WebSocket, data: NSData) {
         
     }
 }
