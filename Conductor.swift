@@ -8,11 +8,11 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 import Foundation
-#if os(iOS)
-    import Starscream
-#elseif os(OSX)
-    import StarscreamOSX
-#endif
+//#if os(iOS)
+//    import Starscream
+//#elseif os(OSX)
+//    import StarscreamOSX
+//#endif
 
 public enum ConOpCode: Int {
     case Bind   = 1
@@ -92,7 +92,7 @@ public class Conductor : WebSocketDelegate {
         socket = WebSocket(url: url)
         socket.delegate = self
         socket.headers["Token"] = authToken
-        socket.connect()
+        //socket.connect()
     }
     
     ///set the authToken of the client
