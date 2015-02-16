@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D965954A19E458C100B80735 /* ConductorOSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D965953E19E458C100B80735 /* ConductorOSX.framework */; };
+		D965954A19E458C100B80735 /* Conductor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D965953E19E458C100B80735 /* Conductor.framework */; };
 		D965958819E4790800B80735 /* Conductor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D965957D19E4790800B80735 /* Conductor.framework */; };
 		D96595A519E47C6100B80735 /* ConductorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96595A319E47C6100B80735 /* ConductorTests.swift */; };
 		D96595A619E47C6100B80735 /* ConductorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96595A319E47C6100B80735 /* ConductorTests.swift */; };
@@ -35,7 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D965953E19E458C100B80735 /* ConductorOSX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ConductorOSX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D965953E19E458C100B80735 /* Conductor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Conductor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D965954919E458C100B80735 /* ConductorOSXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConductorOSXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D965957D19E4790800B80735 /* Conductor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Conductor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D965958719E4790800B80735 /* ConductorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConductorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,7 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D965954A19E458C100B80735 /* ConductorOSX.framework in Frameworks */,
+				D965954A19E458C100B80735 /* Conductor.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,7 +92,7 @@
 		D965953F19E458C100B80735 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D965953E19E458C100B80735 /* ConductorOSX.framework */,
+				D965953E19E458C100B80735 /* Conductor.framework */,
 				D965954919E458C100B80735 /* ConductorOSXTests.xctest */,
 				D965957D19E4790800B80735 /* Conductor.framework */,
 				D965958719E4790800B80735 /* ConductorTests.xctest */,
@@ -164,7 +164,7 @@
 			);
 			name = ConductorOSX;
 			productName = Conductor;
-			productReference = D965953E19E458C100B80735 /* ConductorOSX.framework */;
+			productReference = D965953E19E458C100B80735 /* Conductor.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		D965954819E458C100B80735 /* ConductorOSXTests */ = {
@@ -438,7 +438,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Conductor;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -457,7 +457,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Conductor;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;

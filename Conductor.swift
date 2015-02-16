@@ -8,11 +8,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 import Foundation
-//#if os(iOS)
-//    import Starscream
-//#elseif os(OSX)
-//    import StarscreamOSX
-//#endif
+//import Starscream
 
 public enum ConOpCode: Int {
     case Bind   = 1
