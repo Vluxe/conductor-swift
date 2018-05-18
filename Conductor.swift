@@ -8,112 +8,89 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 import Foundation
-//import Starscream
 
-public enum ConOpCode: Int {
-    case Bind   = 1
-    case Unbind = 2
-    case Write  = 3
-    case Info   = 4
-    case Server = 7
-    case Invite = 8
+public enum ConOpCode: UInt16 {
+    case Bind        = 0
+    case Unbind      = 1
+    case Write       = 2
+    case Server      = 3
+    case CleanUp     = 4
+    case StreamStart = 5
+    case StreamEnd   = 6
+    case StreamWrite = 7
 }
 
-enum MessageType: String {
-    case name = "name"
-    case channelName = "channel_name"
-    case body = "body"
-    case opCode = "opcode"
-    case additional = "additional"
-}
 //This represents messages that come back from the channel
 public struct Message {
-    
-    public var name: String?
-    var body: String?
-    var channelName: String?
-    var opcode: ConOpCode
-    var additional: AnyObject?
-    
-    init(body: String?, name: String?, channelName: String?, code: Int, additional: AnyObject?) {
-        self.opcode = ConOpCode(rawValue: code)!
-        self.name = name
-        self.channelName = channelName
-        self.body = body
-        self.additional = additional
+    public let opcode: UInt16
+    let uuidSize: UInt16
+    public let uuid: String
+    let nameSize: UInt16
+    public let channelName: String
+    let bodySize: UInt32
+    public let body: Data
+
+    func marshal() -> Data {
+        var buffer = Data()
+        buffer.append(convertToBytes(opcode.littleEndian), count: 2)
+
+        buffer.append(convertToBytes(uuidSize.littleEndian), count: 2)
+        buffer.append(uuid.data(using: .utf8) ?? Data())
+
+        buffer.append(convertToBytes(nameSize.littleEndian), count: 2)
+        buffer.append(channelName.data(using: .utf8) ?? Data())
+
+        buffer.append(convertToBytes(bodySize.littleEndian), count: 4)
+        buffer.append(body)
+        return buffer
     }
-    //create a message from a JSON string
-    public static func messageFromString(jsonString: String) -> Message {
-        let data = jsonString.dataUsingEncoding(NSUTF8StringEncoding)
-        let dict = NSJSONSerialization.JSONObjectWithData(data!, options: .allZeros, error: nil) as Dictionary<String, AnyObject>
-        let opcode = dict[MessageType.opCode.rawValue] as? Int
-        return Message(body: dict[MessageType.body.rawValue] as? String, name: dict[MessageType.name.rawValue] as? String,
-            channelName: dict[MessageType.channelName.rawValue] as? String, code: opcode!, additional: dict[MessageType.additional.rawValue])
-   }
-    // convert the data to a JSON string
-    public func toJSONString() -> String {
-        var dict = Dictionary<String,AnyObject>()
-        
-        if(body != nil) {
-            dict[MessageType.body.rawValue] = body
+
+    func convertToBytes<T>(_ source: T) -> [UInt8] {
+        var value = source
+        let bytes = withUnsafePointer(to: &value) {
+            $0.withMemoryRebound(to: UInt8.self, capacity: MemoryLayout.size(ofValue: source)) {
+                Array(UnsafeBufferPointer(start: $0, count: MemoryLayout.size(ofValue: source)))
+            }
         }
-        if(name != nil) {
-            dict[MessageType.name.rawValue] = name
-        }
-        if(channelName != nil) {
-            dict[MessageType.channelName.rawValue] = channelName
-        }
-        if(additional != nil) {
-            dict[MessageType.additional.rawValue] = additional
-        }
-        dict[MessageType.opCode.rawValue] = opcode.rawValue
-        let data = NSJSONSerialization.dataWithJSONObject(dict, options: .allZeros, error: nil)
-        return NSString(data: data!, encoding: NSUTF8StringEncoding)!
+        return bytes
     }
+
 }
 
 //This is where the main logic happens
 public class Conductor : WebSocketDelegate {
-    var socket: WebSocket!
+    let socket: WebSocket
     var channels = Dictionary<String,((Message) -> Void)>()
     var serverChannel:((Message) -> Void)?
-    var connectionStatus:((Bool) -> Void)?
+    public var connectionStatus:((Bool) -> Void)?
     var connection = false
     var kAllMessages = "*"
     public var isConnected: Bool { return connection }
     
     ///url is the conductor server to connect to and authToken is the token to use.
-    public init(_ url: NSURL, _ authToken: String) {
-        //setup and use websocket
-        socket = WebSocket(url: url)
+    public init(request: URLRequest) {
+        socket = WebSocket(request: request)
         socket.delegate = self
-        socket.headers["Token"] = authToken
-        //socket.connect()
-    }
-    
-    ///set the authToken of the client
-    public func setAuthToken(token: String) {
-        socket.headers["Token"] = token
     }
     
     ///Bind to a channel by its name and get messages from it
-    public func bind(channelName: String, _ messages:((Message) -> Void)) {
+    public func bind(channelName: String, messages: @escaping ((Message) -> Void)) {
         channels[channelName] = messages
         if channelName != kAllMessages {
-            writeMessage("", channelName, .Bind, nil)
+            writeMessage(opcode: .Bind, channelName: channelName, body: Data())
         }
     }
     
     ///Unbind from a channel by its name and stop getting messages from it
     public func unbind(channelName: String) {
-        channels.removeValueForKey(channelName)
+        channels.removeValue(forKey: channelName)
         if channelName != kAllMessages {
-            writeMessage("", channelName, .Unbind, nil)
+            writeMessage(opcode: .Unbind, channelName: channelName, body: Data())
         }
     }
     
     ///Bind to the "server channel" and get messages that are from the server opcode
-    public func serverBind(messages:((Message) -> Void)) {
+    public func serverBind(messages:@escaping ((Message) -> Void)) {
         self.serverChannel = messages
     }
     
@@ -125,30 +102,20 @@ public class Conductor : WebSocketDelegate {
     }
     
     ///send a message to a channel with the write opcode
-    public func sendMessage(body: String, _ channelName: String, _ additional: AnyObject?) {
-        writeMessage(body, channelName,.Write, additional)
-    }
-    
-    ///send a message to a channel with the info opcode
-    public func sendInfo(body: String, _ channelName: String, _ additional: AnyObject?) {
-        writeMessage(body, channelName,.Info, additional)
-    }
-    
-    ///send a invite to a channel to a user
-    public func sendInvite(name: String, _ channelName: String, _ additional: AnyObject? = nil) {
-        writeMessage(name, channelName, .Invite, additional)
+    public func sendMessage(channelName: String, body: Data) {
+        writeMessage(opcode: .Write, channelName: channelName, body: body)
     }
     
     ///send a message to a channel with the server opcode. 
     ///note that channelName is optional in this case and is only used for context.
-    public func sendServerMessage(body: String, _ channelName: String?, _ additional: AnyObject?) {
-        writeMessage(body,channelName,.Server,additional)
+    public func sendServerMessage(channelName: String, body: Data) {
+        writeMessage(opcode: .Server, channelName: channelName, body: body)
     }
     
     ///connect to the stream, if not connected
     public func connect() {
         if !connection {
-            channels.removeAll(keepCapacity: false)
+            channels.removeAll()
             socket.connect()
         }
     }
@@ -156,21 +123,64 @@ public class Conductor : WebSocketDelegate {
     //disconnect from the stream, if connected
     public func disconnect() {
         if connection {
-            channels.removeAll(keepCapacity: false)
+            channels.removeAll()
             socket.disconnect()
         }
     }
     
     ///writes the message to the websocket
-    private func writeMessage(body: String, _ channelName: String?, _ opcode: ConOpCode, _ additional: AnyObject?) {
-        let message =  Message(body: body, name: nil, channelName: channelName, code: opcode.rawValue, additional: additional)
-        socket.writeString(message.toJSONString())
+    private func writeMessage(opcode: ConOpCode, channelName: String, body: Data) {
+        let uuid = UUID().uuidString
+        let message =  Message(opcode: opcode.rawValue, uuidSize: UInt16(uuid.count), uuid: uuid, nameSize: UInt16(channelName.count), channelName: channelName, bodySize: UInt32(body.count), body: body)
+        socket.write(data: message.marshal())
+    }
+
+    private func unmarshal(data: Data) -> Message {
+        var offset: Int = 0
+        
+        //opcode
+        var opcode: UInt16 = 0
+        offset += read(value: &opcode, data: data, offset: offset)
+
+        //uuid
+        var uuidSize: UInt16 = 0
+        offset += read(value: &uuidSize, data: data, offset: offset)
+
+        let uuidEnd = offset + Int(uuidSize)
+        let uuid = String(data: data.subdata(in: offset..<uuidEnd), encoding: .utf8) ?? ""
+        offset += uuid.count
+
+        //name
+        var nameSize: UInt16 = 0
+        offset += read(value: &nameSize, data: data, offset: offset)
+
+        let nameEnd = offset + Int(nameSize)
+        let channelName = String(data: data.subdata(in: offset..<nameEnd), encoding: .utf8) ?? ""
+        offset += channelName.count
+
+        //body
+        var bodySize: UInt32 = 0
+        offset += read(value: &bodySize, data: data, offset: offset)
+
+        let bodyEnd = offset + Int(bodySize)
+        let body = data.subdata(in: offset..<bodyEnd)
+
+        return Message(opcode: opcode, uuidSize: uuidSize, uuid: uuid, nameSize: nameSize, channelName: channelName, bodySize: bodySize, body: body)
+    }
+
+    private func read<T>(value: inout T, data: Data, offset: Int) -> Int {
+        let subEnd = offset + MemoryLayout<T>.size
+        let subData = data.subdata(in: offset..<subEnd)
+        value = subData.withUnsafeBytes { (ptr: UnsafePointer<T>) -> T in
+            return ptr.pointee
+        }
+        return MemoryLayout<T>.size
     }
     
     //MARK: Websocket delegate methods
     
     ///Websocket did connect
-    public func websocketDidConnect(ws: WebSocket) {
+    public func websocketDidConnect(socket: WebSocketClient) {
         connection = true
         if let status = connectionStatus {
             status(connection)
@@ -178,33 +188,33 @@ public class Conductor : WebSocketDelegate {
     }
     
     ///Websocket did disconnect
-    public func websocketDidDisconnect(ws: WebSocket, error: NSError?) {
+    public func websocketDidDisconnect(socket ws: WebSocketClient, error: Error?) {
         connection = false
         if let status = connectionStatus {
             status(connection)
         }
     }
-    
+
+    ///everything is over binary now!
+    public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+
+    }
+
     ///take the message and serialize it to the  Message object then send it to the proper channel
-    public func websocketDidReceiveMessage(ws: WebSocket, text: String) {
-        let message =  Message.messageFromString(text)
-        if message.opcode == .Server || message.opcode == .Invite {
+    public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+        let message = unmarshal(data: data)
+        if message.opcode == ConOpCode.Server.rawValue {
             if let callback = serverChannel {
-               callback(message)
+                callback(message)
             }
         } else {
-            if let callback = channels[message.channelName!] {
+            if let callback = channels[message.channelName] {
                 callback(message)
             }
             if let callback = channels[kAllMessages] {
                 callback(message)
             }
         }
-    }
-    
-    ///Shouldn't get anything on this.
-    public func websocketDidReceiveData(ws: WebSocket, data: NSData) {
-        
     }
 }
 
